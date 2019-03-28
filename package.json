@@ -8,6 +8,7 @@
     "graphql": "^14.1.1",
     "react": "^16.8.3",
     "react-apollo": "^2.5.1",
+    "apollo-link-context": "^1.0.17",
     "react-dom": "^16.8.3",
     "react-scripts": "2.1.5"
   },
