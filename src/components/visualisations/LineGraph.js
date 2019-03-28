@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as d3 from "d3";
-import { isMobile } from 'react-device-detect';
+// import { isMobile } from 'react-device-detect';
 import { generateScales, generateAxes, generateLine, parseMonth, generateContainer, generateText, generateRect } from "../../utils/d3helpers"
 
 const monthArray = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
