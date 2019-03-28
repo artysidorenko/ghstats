@@ -1,3 +1,9 @@
+/* eslint-disable import/first */
+
+console.log('No value for github token yet:', process.env.REACT_APP_GHTOKEN)
+
+console.log('Value for github token:', process.env.REACT_APP_GHTOKEN)
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -8,13 +14,14 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import './styles/index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
+/* eslint-enable import/first */
 
 const httpLink = createHttpLink({
   uri: 'https://api.github.com/graphql',
 })
 
 const authLink = setContext((_, { headers }) => {
-  const token = 'f51d39a43902e0ec10ecd875ca1330432484c9b7'
+  const token = process.env.REACT_APP_GHTOKEN
   // return the headers to the context so httpLink can read them
   return {
     headers: {

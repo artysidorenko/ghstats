@@ -1,12 +1,21 @@
 import * as d3 from "d3";
 
+const monthArray = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+
 export function parseMonth (monthArray, datapoint) {
   return new Date(parseInt(`20${datapoint.slice(3)}`), monthArray.indexOf(datapoint.slice(0, 3)), 1)
 }
 
 export function generateScales (dataArray, dataField, height, width) {
+  // console.log(dataArray[0][0])
+  // console.log(dataArray[dataArray.length - 1][0])
+  // console.log(parseMonth(monthArray, dataArray[0][0]))
+  // console.log(parseMonth(monthArray, dataArray[dataArray.length - 1][0]))
   const xScale = d3.scaleTime()
-    .domain([new Date(2018, 8, 1), new Date(2019, 1, 28)])
+    .domain([
+      parseMonth(monthArray, dataArray[0][0]),
+      parseMonth(monthArray, dataArray[dataArray.length-1][0])
+    ])
     .range([0, width])
   const yScale = d3.scaleLinear()
     .domain([

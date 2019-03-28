@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as d3 from "d3";
-import { generateScales, generateAxes, generateLine, parseMonth, generateContainer, generateText, generateRect } from "../utils/d3helpers"
+import { isMobile } from 'react-device-detect';
+import { generateScales, generateAxes, generateLine, parseMonth, generateContainer, generateText, generateRect } from "../../utils/d3helpers"
 
 const monthArray = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 
@@ -10,19 +11,32 @@ class LineGraph extends Component {
     return <div className="LineGraph__container" style={{position: 'relative'}}></div>
   }
   componentDidMount() {
-    this.drawGraph(this.props.data)
+    console.log('mounted')
+    if (this.props.data) this.drawGraph(this.props.data)
+  }
+  componentDidUpdate(prevProps) {
+    console.log('updating')
+    if (this.props.data !== prevProps.data) {
+      this.removeGraph()
+      this.drawGraph(this.props.data)
+    }
+  }
+
+  removeGraph() {
+    console.log('removing old graph')
+    d3.selectAll(".LineGraph__container > *").remove();
   }
 
   drawGraph(dataObject) {
 
     // Get data
     const dataArray = Object.entries(dataObject).slice(1)
-    console.log(dataArray)
 
     // Set visual dimensions and margin
-    const margin = { top: 50, right: 50, bottom: 50, left: 75 },
-          height = 300 - margin.top - margin.bottom,
-          width = 700 - margin.left - margin.right
+
+    const margin = window.innerWidth > 700 ? { top: 50, right: 50, bottom: 50, left: 75 } : { top: 25, right: 25, bottom: 25, left: 35 }
+    const height = window.innerWidth > 700 ? 400 - margin.top - margin.bottom : 400 - margin.top - margin.bottom
+    const width = window.innerWidth > 700 ? 700 - margin.left - margin.right : 350 - margin.left - margin.right
 
     // D3 - Generate scale and axes
     const { xScale, yScale } = generateScales(dataArray, 'repositoryCount', height, width)
@@ -33,7 +47,7 @@ class LineGraph extends Component {
                   .append("svg")
                   .attr("width", width + margin.left + margin.right)
                   .attr("height", height + margin.top + margin.bottom)
-                  .style("border", "solid 1px black")
+                  // no border for now .style("border", "solid 1px black")
                   .append("g")
                   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                   .attr("class", "LineGraph__canvas")
@@ -43,6 +57,14 @@ class LineGraph extends Component {
       .attr("transform", "translate(0," + height + ")")
       .attr("class", "LineGraph__xAxis")
       .call(xAxis)
+    // Rotate x-axis labels so months are all visible
+    .selectAll("text")
+      // .attr("y", 5)
+      // .attr("x", 0)
+      .attr("dy", ".5em")
+      .attr("transform", "rotate(315)")
+      .style("text-anchor", "end");
+
     svg.append("g")
       .attr("transform", "translate(0,0)")
       .attr("class", "LineGraph__yAxis")
