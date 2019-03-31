@@ -29,8 +29,6 @@ class Languages extends Component {
   }
 
   render() {
-    console.log(this.state)
-    console.log(`${this.state.year}-${monthsDigit[monthsWord.indexOf(this.state.month)]}`)
     return (
       <div className="Languages__container">
         <form onSubmit={this.handleSubmit}>

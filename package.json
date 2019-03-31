@@ -7,14 +7,15 @@
   },
   "dependencies": {
     "apollo-boost": "^0.3.1",
+    "apollo-link-context": "^1.0.17",
+    "auth0-js": "^9.10.1",
+    "d3": "^5.9.2",
     "dotenv": "^7.0.0",
     "graphql": "^14.1.1",
     "react": "^16.8.3",
     "react-apollo": "^2.5.1",
-    "apollo-link-context": "^1.0.17",
     "react-dom": "^16.8.3",
-    "react-scripts": "2.1.5",
-    "d3": "^5.9.2"
+    "react-scripts": "2.1.5"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,9 +1,3 @@
-/* eslint-disable import/first */
-
-console.log('No value for github token yet:', process.env.REACT_APP_GHTOKEN)
-
-console.log('Value for github token:', process.env.REACT_APP_GHTOKEN)
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -13,8 +7,11 @@ import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import './styles/index.css';
 import App from './components/App';
+import Auth from './auth/Auth';
+import history from './history';
 import * as serviceWorker from './serviceWorker';
-/* eslint-enable import/first */
+
+const auth = new Auth();
 
 const httpLink = createHttpLink({
   uri: 'https://api.github.com/graphql',
@@ -38,7 +35,7 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <App />
+    <App history={history} auth={auth} />
   </ApolloProvider>
   , document.getElementById('root'));
 
