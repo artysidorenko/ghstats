@@ -40,8 +40,6 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <App history={history} auth={auth} setToken={(githubAccess) => {
       token = githubAccess
-      console.log(token)
-      console.log(authLink)
     }}/>
   </ApolloProvider>
   , document.getElementById('root'));

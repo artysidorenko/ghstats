@@ -85,7 +85,7 @@ class NewRepos extends Component {
             Language:
           <input placeholder="Enter desired language" value={this.state.language} onChange={this.handleChangeLanguage}/>
           </label>
-          <input type="submit" value="Submit" />
+          <input type="submit" value="Submit" disabled={!this.props.keyReceived}/>
         </form>
         {this.state.submit && <Query
           query={NEW_REPOS_QUERY(this.state.fromMonth + this.state.fromYear, this.state.toMonth + this.state.toYear, this.state.language)}
