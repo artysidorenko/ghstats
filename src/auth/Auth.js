@@ -26,7 +26,7 @@ export default class Auth {
   }
 
   login() {
-    console.log(auth0.redirectUri)
+    console.log(`redirect URI: ${auth0.redirectUri}`)
     this.auth0.authorize();
   }
 

@@ -4,6 +4,11 @@ const AUTH_CONFIG = {
   callbackUrl: 'https://ghstats-arty.herokuapp.com/'
 }
 
+if (process.env.REACT_APP_CONTEXT === 'localmachine') {
+  console.log('you are in dev/local mode')
+  AUTH_CONFIG.callbackUrl = 'http://localhost:3000'
+}
+
 // if (process.env.REACT_APP_CONTEXT === 'localmachine') {
 //   AUTH_CONFIG.callbackUrl = 'http://localhost:3000'
 // } else AUTH_CONFIG.callbackUrl = 'http://localhost:3000'
