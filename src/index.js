@@ -17,8 +17,11 @@ const httpLink = createHttpLink({
   uri: 'https://api.github.com/graphql',
 })
 
+// let token = process.env.REACT_APP_GHTOKEN
+let token = null
+
 const authLink = setContext((_, { headers }) => {
-  const token = process.env.REACT_APP_GHTOKEN
+  // const token = process.env.REACT_APP_GHTOKEN
   // return the headers to the context so httpLink can read them
   return {
     headers: {
@@ -35,7 +38,9 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <App history={history} auth={auth} />
+    <App history={history} auth={auth} setToken={(githubAccess) => {
+      token = githubAccess
+    }}/>
   </ApolloProvider>
   , document.getElementById('root'));
 

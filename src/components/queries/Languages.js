@@ -49,7 +49,7 @@ class Languages extends Component {
               )}
             </select>
           </label>
-          <input type="submit" value="Submit" />
+          <input type="submit" value="Submit" disabled={!this.props.keyReceived}/>
         </form>
         {this.state.submit && <Query
           query={LANGUAGE_REPOS_QUERY(`${this.state.year}-${monthsDigit[monthsWord.indexOf(this.state.month)]}`)}

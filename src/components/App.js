@@ -9,7 +9,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: null
+      keyReceived: false
     }
   }
 
@@ -25,7 +25,10 @@ class App extends Component {
     const { renewSession } = this.props.auth;
     if (localStorage.getItem('isLoggedIn') === 'true') {
       renewSession(authResult => {
-        this.setState({ token: authResult.accessToken })
+        this.getAPIToken(authResult.idToken, body => {
+          this.props.setToken(body)
+          this.setState({ keyReceived: true })
+        })
       });
     }
     else if (this.props.history.location.hash) this.handleAuthentication(this.props.history)
@@ -34,17 +37,31 @@ class App extends Component {
   handleAuthentication = ({ location }) => {
     if (/access_token|id_token|error/.test(location.hash)) {
       this.props.auth.handleAuthentication(authResult => {
-        this.setState({ token: authResult.accessToken })
+        this.getAPIToken(authResult.idToken, body => {
+          this.props.setToken(body)
+          this.setState({ keyReceived: true })
+        })
       })
     }
   }
 
+  getAPIToken = (jwt, callback) => {
+    const request = require("request");
+    const options = {
+      method: 'GET',
+      url: 'https://wt-f1d82d610072deeaf794b2ad8e84524c-0.sandbox.auth0-extend.com/authToken',
+      headers: { authorization: `Bearer ${jwt}` },
+    };
+
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error);
+      callback(body)
+    });
+  }
+
   render() {
-    const { isAuthenticated, getAccessToken, getIdToken } = this.props.auth
-
+    const { isAuthenticated } = this.props.auth
     const authCheck = isAuthenticated()
-
-    console.log('token: ' + this.state.token)
 
     return (
       <div className="App__container">
@@ -60,8 +77,8 @@ class App extends Component {
         )}
         {authCheck && <h2>Logged in!</h2>}
         <h3>Instructions once authorised: for each visualisation, select the desired parameters and click submit to fetch and visualise data</h3>
-        <MonthlyNewRepos />
-        <Languages />
+        <MonthlyNewRepos keyReceived={this.state.keyReceived} />
+        <Languages keyReceived={this.state.keyReceived} />
       </div>
     )
   }
