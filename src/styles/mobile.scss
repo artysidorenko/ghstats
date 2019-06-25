@@ -24,7 +24,7 @@
     box-sizing: border-box;
     width: 100%;
 
-    label {
+    div {
       display: grid;
       grid-template-rows: 1fr;
     }
@@ -51,7 +51,7 @@
       }
     }
 
-    input, label {
+    input, div {
       margin: 2px;
     }
 

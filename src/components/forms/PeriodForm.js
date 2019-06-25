@@ -17,7 +17,7 @@ const PeriodForm = ({
   language
 }) => (
   <form onSubmit={handleSubmit}>
-    <label className="from">
+    <div className="from">
       From:
           <select value={fromMonth} onChange={handleChangeFromMonth}>
         {monthsWord.map((elem, index) =>
@@ -33,8 +33,8 @@ const PeriodForm = ({
           </option>
         )}
       </select>
-    </label>
-      <label className="to">
+    </div>
+      <div className="to">
       To:
           <select value={toMonth} onChange={handleChangeToMonth}>
         {monthsWord.map((elem, index) =>
@@ -50,11 +50,11 @@ const PeriodForm = ({
           </option>
         )}
       </select>
-    </label>
-    <label className="language">
+    </div>
+    <div className="language">
       Language:
           <input placeholder="Enter desired language" value={language} onChange={handleChangeLanguage} />
-    </label>
+    </div>
     <input type="submit" value="Submit" disabled={!keyReceived} />
   </form>
 )

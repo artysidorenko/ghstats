@@ -112,7 +112,8 @@ form {
   background-color: #41B3A3;
   border-radius: 10px;
 
-  label {
+  div {
+    display: inline-block;
     font-family: sans-serif;
     padding: 0 3px;
     font-weight: bold;

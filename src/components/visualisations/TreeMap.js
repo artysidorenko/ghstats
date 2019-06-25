@@ -126,8 +126,8 @@ class TreeMap extends Component {
     function handleMouseOver(d, i) {
       d3.select(this).style('cursor', 'pointer')
       d3.select('.TreeMap__tooltip')
-        .style("left", (d3.event.pageX + 10) + "px")
-        .style("top", (d3.event.pageY - 800) + "px")
+        .style("left", (d3.event.pageX + 10 + shiftToolTipLeft(d3.event.pageX + 10, width)) + "px")
+        .style("top", (d3.event.pageY - 800 + shiftToolTipTop(d3.event.pageY - 800, height)) + "px")
         .html(`
           <p>Language: ${d.data.name}</p>
           <p>New Repos: ${d.data.value}</p>
@@ -147,6 +147,16 @@ class TreeMap extends Component {
         .duration(750)
         .style('opacity', 0)
         .style('z-index', -100)
+    }
+
+    // Mobile-friendly tooltip offsets to prevent going off-screen
+    function shiftToolTipTop(top, height) {
+      if (2 * top > height) return -0.5 * height
+      return 0
+    }
+    function shiftToolTipLeft(left, width) {
+      if (2 * left > width) return -0.5 * width
+      return 0
     }
   }
 }

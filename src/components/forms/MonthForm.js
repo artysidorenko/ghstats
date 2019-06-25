@@ -11,7 +11,7 @@ const MonthForm = ({
   year
 }) => (
     <form onSubmit={handleSubmit}>
-      <label className="month">
+      <div className="month">
         Period:
           <select value={month} onChange={handleChangeMonth}>
           {monthsWord.map((elem, index) =>
@@ -27,7 +27,7 @@ const MonthForm = ({
             </option>
           )}
         </select>
-      </label>
+      </div>
       <input type="submit" value="Submit" disabled={!keyReceived} />
     </form>
   )

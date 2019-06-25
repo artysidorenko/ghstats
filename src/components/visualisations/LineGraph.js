@@ -1,9 +1,7 @@
-import React, { Component } from 'react';
-import * as d3 from "d3";
-// import { isMobile } from 'react-device-detect';
+import React, { Component } from 'react'
+import * as d3 from "d3"
 import { generateScales, generateAxes, generateLine, parseMonth, generateContainer, generateText, generateRect } from "../../utils/d3helpers"
-
-const monthArray = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+import { monthsWord as monthArray } from '../../utils/queryHelpers'
 
 class LineGraph extends Component {
 
@@ -122,8 +120,13 @@ class LineGraph extends Component {
       d3.select(this).style('cursor', 'pointer')
       d3.select('.LineGraph__tooltip')
         .style('opacity', 1)
-        .style('top', `${yScale(d[1].repositoryCount) + margin.top}px`)
-        .style('left', `${xScale(parseMonth(monthArray, d[0])) + 2 * margin.left}px`)
+        .style('top', `${
+          yScale(d[1].repositoryCount) + margin.top +
+            shiftToolTipTop(yScale(d[1].repositoryCount) + margin.top, height)
+          }px`)
+        .style('left', `${xScale(parseMonth(monthArray, d[0])) + 2 * margin.left + 
+            shiftToolTipLeft(xScale(parseMonth(monthArray, d[0])) + 2 * margin.left, width)
+          }px`)
         .style('padding', '0 10px')
         .html(`
           <p>Period: ${d[0][0].toUpperCase() + d[0].slice(1, 3)}-${d[0].slice(3, 5)}</p>
@@ -134,6 +137,16 @@ class LineGraph extends Component {
     function handleMouseOut (d, i) {
       d3.select('.LineGraph__tooltip')
         .style('opacity', 0)
+    }
+
+    // Mobile-friendly tooltip offsets to prevent going off-screen
+    function shiftToolTipTop (top, height) {
+      if (2 * top > height) return -0.5 * height
+      return 0
+    }
+    function shiftToolTipLeft (left, width) {
+      if (2 * left > width) return -0.5 * width
+      return 0
     }
   }  
 }
