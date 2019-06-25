@@ -21,14 +21,14 @@ const PeriodForm = ({
       From:
           <select value={fromMonth} onChange={handleChangeFromMonth}>
         {monthsWord.map((elem, index) =>
-          <option key={index} value={elem}>
+          <option key={`fromMonth-${index}`} value={elem}>
             {elem}
           </option>
         )}
       </select>
       <select value={fromYear} onChange={handleChangeFromYear}>
         {years.map((elem, index) =>
-          <option key={index} value={elem}>
+          <option key={`fromYear-${index}`} value={elem}>
             {elem}
           </option>
         )}
@@ -38,14 +38,14 @@ const PeriodForm = ({
       To:
           <select value={toMonth} onChange={handleChangeToMonth}>
         {monthsWord.map((elem, index) =>
-          <option key={index} value={elem}>
+          <option key={`toMonth-${index}`} value={elem}>
             {elem}
           </option>
         )}
       </select>
       <select value={toYear} onChange={handleChangeToYear}>
         {years.map((elem, index) =>
-          <option key={index} value={elem}>
+          <option key={`toYear-${index}`} value={elem}>
             {elem}
           </option>
         )}

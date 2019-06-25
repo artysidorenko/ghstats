@@ -15,14 +15,14 @@ const MonthForm = ({
         Period:
           <select value={month} onChange={handleChangeMonth}>
           {monthsWord.map((elem, index) =>
-            <option key={index} value={elem}>
+            <option key={`month-${index}`} value={elem}>
               {elem}
             </option>
           )}
         </select>
         <select value={year.slice(2)} onChange={handleChangeYear}>
           {years.map((elem, index) =>
-            <option key={index} value={elem}>
+            <option key={`year-${index}`} value={elem}>
               {elem}
             </option>
           )}
