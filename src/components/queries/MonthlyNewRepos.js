@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import LineGraph from '../visualisations/LineGraph'
-
-// https://help.github.com/en/articles/searching-for-repositories
+import PeriodForm from '../forms/PeriodForm'
+import { NEW_REPOS_QUERY } from '../../utils/queryHelpers'
 
 class NewRepos extends Component {
   constructor(props) {
@@ -46,53 +46,40 @@ class NewRepos extends Component {
   render() {
     return (
       <div className="NewRepos__container">
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            From:
-          <select value={this.state.fromMonth} onChange={this.handleChangeFromMonth}>
-            {monthsWord.map((elem, index) =>
-              <option key={index} value={elem}>
-                {elem}
-              </option>
-            )}
-          </select>
-            <select value={this.state.fromYear} onChange={this.handleChangeFromYear}>
-            {years.map((elem, index) =>
-              <option key={index} value={elem}>
-                {elem}
-              </option>
-            )}
-          </select>
-          </label>
-          <label>
-            To:
-          <select value={this.state.toMonth} onChange={this.handleChangeToMonth}>
-              {monthsWord.map((elem, index) =>
-                <option key={index} value={elem}>
-                  {elem}
-                </option>
-              )}
-            </select>
-            <select value={this.state.toYear} onChange={this.handleChangeToYear}>
-              {years.map((elem, index) =>
-                <option key={index} value={elem}>
-                  {elem}
-                </option>
-              )}
-            </select>
-          </label>
-          <label>
-            Language:
-          <input placeholder="Enter desired language" value={this.state.language} onChange={this.handleChangeLanguage}/>
-          </label>
-          <input type="submit" value="Submit" disabled={!this.props.keyReceived}/>
-        </form>
+        <PeriodForm
+          handleSubmit={this.handleSubmit}
+          handleChangeFromMonth={this.handleChangeFromMonth}
+          handleChangeFromYear={this.handleChangeFromYear}
+          handleChangeToMonth={this.handleChangeToMonth}
+          handleChangeToYear={this.handleChangeToYear}
+          handleChangeLanguage={this.handleChangeLanguage}
+          keyReceived={this.props.keyReceived}
+          fromMonth={this.state.fromMonth}
+          fromYear={this.state.fromYear}
+          toMonth={this.state.toMonth}
+          toYear={this.state.toYear}
+          language={this.state.language}
+        />
+        {!this.state.submit && !localStorage.getItem('isLoggedIn') && (
+          <h4 className="NewRepos__Message">
+            Monthly New Repo Trend: Please login to access visualisations
+          </h4>
+        )}
+        {!this.state.submit && localStorage.getItem('isLoggedIn') && (
+          <h4 className="NewRepos__Message">
+            Monthly New Repo Trend: Select your request using the dropdowns
+          </h4>
+        )}
         {this.state.submit && <Query
-          query={NEW_REPOS_QUERY(this.state.fromMonth + this.state.fromYear, this.state.toMonth + this.state.toYear, this.state.language)}
+          query={NEW_REPOS_QUERY(this.state.fromMonth + this.state.fromYear, this.state.toMonth + this.state.toYear, this.state.language, gql)}
         >
           {({ loading, error, data }) => {
-            if (loading) return <span>Loading</span>
-            if (error) return <div>Error, please see below. <br />
+            if (loading) return (
+              <div className="NewRepos__LoaderBox">
+                <div className="loader"></div>
+              </div>
+            )
+            if (error) return <div className="NewRepos__Message">Error, please see below. In the event of a network error you may need to delete local storage/cookies/cache and refresh page to login again<br />
               ${error.toString()}</div>
             console.log(`Operation quota cost: ${data.rateLimit.cost}`)
             console.log(`Quota remaining: ${data.rateLimit.remaining}`)
@@ -106,79 +93,5 @@ class NewRepos extends Component {
     );
   }
 }
-
-const monthsWord = [
-  'jan',
-  'feb',
-  'mar',
-  'apr',
-  'may',
-  'jun',
-  'jul',
-  'aug',
-  'sep',
-  'oct',
-  'nov',
-  'dec'
-]
-
-const years = ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-]
-
-const monthsDigit = [
-  '01',
-  '02',
-  '03',
-  '04',
-  '05',
-  '06',
-  '07',
-  '08',
-  '09',
-  '10',
-  '11',
-  '12'
-]
-
-const NEW_REPOS_QUERY = (from, to, language) => gql`
-  query {
-  rateLimit {
-    cost
-    remaining
-    resetAt
-  
-  }
-  ${generateMonths(from, to, language)}
-}
-`
-const generateMonths = (from, to, language) => {
-  let output = ``
-  let current = from
-  let limit = 0
-  while (current !== to && limit < 120) {
-    // add node to GQL query
-    output += `${addMonthNode(current.slice(0, 3), `20${current.slice(3)}`, language)}`
-    // increment year if required
-    if (current.slice(0, 3) === 'dec') {
-      current = `jan${parseInt(current.slice(3))+1}`
-    }
-    // otherwise increment month
-    else {
-      current = `${monthsWord[monthsWord.indexOf(current.slice(0, 3)) + 1]}${current.slice(3)}`
-    }
-    limit ++
-  }
-  return output
-}
-
-const addMonthNode = (month, year, language) =>
-`
-${month}${year.slice(2)}: search (
-    type: REPOSITORY
-    query: "created:${year}-${monthsDigit[monthsWord.indexOf(month)]} language:${language}"
-  ) {
-    repositoryCount
-  } 
-`
 
 export default NewRepos;

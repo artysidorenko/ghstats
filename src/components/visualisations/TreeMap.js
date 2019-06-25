@@ -52,9 +52,9 @@ class TreeMap extends Component {
     }
 
     // Set visual dimensions and margin
-    const margin = window.innerWidth > 700 ? { top: 0, right: 0, bottom: 0, left: 0 } : { top: 10, right: 10, bottom: 10, left: 10 }
-    const height = window.innerWidth > 700 ? 500 - margin.top - margin.bottom : 500 - margin.top - margin.bottom
-    const width = window.innerWidth > 700 ? 700 - margin.left - margin.right : 350 - margin.left - margin.right
+    const margin = window.innerWidth > 736 ? { top: 0, right: 0, bottom: 0, left: 0 } : { top: 10, right: 10, bottom: 10, left: 10 }
+    const height = window.innerWidth > 736 ? 500 - margin.top - margin.bottom : 500 - margin.top - margin.bottom
+    const width = window.innerWidth > 736 ? 736 - margin.left - margin.right : 350 - margin.left - margin.right
 
     // Set root data for treemap (needs to be ordered) in case of multiple levels
     const root = d3.hierarchy(dataHierarchy)

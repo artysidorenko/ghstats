@@ -1,0 +1,67 @@
+@media screen and (max-width: 736px) {
+
+  #root {
+    position: relative;
+    width: 99vw;
+    // margin: auto;
+  }
+
+  .App__container {
+    width: 95%;
+    border: none;
+  }
+
+  .NewRepos__container, .Languages__container {
+    width: 99%;
+  }
+
+  form {
+    padding: 2px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+
+    label {
+      display: grid;
+      grid-template-rows: 1fr;
+    }
+
+    .from, .to {
+      text-align: right;
+      grid-template-columns: 100px 100px 100px;
+    }
+
+    .month {
+
+      select {
+        margin: 2px;
+      }
+    }
+
+    .language {
+      text-align: right;
+      grid-template-columns: 100px 200px;
+
+      input {
+        max-width: 200px;
+        width: 193px;
+      }
+    }
+
+    input, label {
+      margin: 2px;
+    }
+
+  }
+}
+
+.LineGraph__container {
+  // margin-left: 20px;
+}
+
+.LineGraph__container, .TreeMap__container {
+  margin-bottom: 20px;
+}

@@ -27,6 +27,18 @@ class LineGraph extends Component {
     d3.selectAll(".LineGraph__container > *").remove();
   }
 
+  // in case of mobile, replace full month text with 3 letter abbreviation
+  formatMobile(d) {
+    if (window.innerWidth < 736) {
+      const month = d.toString().slice(4, 7)
+      if (month === 'Jan') {
+        return d.toString().slice(11, 15)
+      }
+      return d.toString().slice(4, 7)
+    }
+    return d
+  }
+
   drawGraph(dataObject) {
 
     // Get data
@@ -34,9 +46,9 @@ class LineGraph extends Component {
 
     // Set visual dimensions and margin
 
-    const margin = window.innerWidth > 700 ? { top: 50, right: 50, bottom: 50, left: 75 } : { top: 25, right: 25, bottom: 25, left: 35 }
-    const height = window.innerWidth > 700 ? 400 - margin.top - margin.bottom : 400 - margin.top - margin.bottom
-    const width = window.innerWidth > 700 ? 700 - margin.left - margin.right : 350 - margin.left - margin.right
+    const margin = window.innerWidth > 736 ? { top: 50, right: 50, bottom: 50, left: 75 } : { top: 25, right: 25, bottom: 25, left: 50 }
+    const height = window.innerWidth > 736 ? 400 - margin.top - margin.bottom : 400 - margin.top - margin.bottom
+    const width = window.innerWidth > 736 ? 736 - margin.left - margin.right : 350 - margin.left - margin.right
 
     // D3 - Generate scale and axes
     const { xScale, yScale } = generateScales(dataArray, 'repositoryCount', height, width)
@@ -56,11 +68,9 @@ class LineGraph extends Component {
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .attr("class", "LineGraph__xAxis")
-      .call(xAxis)
+      .call(xAxis.tickFormat(d => this.formatMobile(d)))
     // Rotate x-axis labels so months are all visible
     .selectAll("text")
-      // .attr("y", 5)
-      // .attr("x", 0)
       .attr("dy", ".5em")
       .attr("transform", "rotate(315)")
       .style("text-anchor", "end");
@@ -106,7 +116,6 @@ class LineGraph extends Component {
       .style('background-color', 'white')
       .style('opacity', 0)
       .attr('class', 'LineGraph__tooltip')
-      // .text('test')
 
 
     function handleMouseOver (d, i) {

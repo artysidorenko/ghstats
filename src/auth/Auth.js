@@ -26,7 +26,7 @@ export default class Auth {
   }
 
   login() {
-    console.log(`redirect URI: ${auth0.redirectUri}`)
+    // console.log(`redirect URI: ${auth0.redirectUri}`)
     this.auth0.authorize();
   }
 
@@ -34,6 +34,8 @@ export default class Auth {
     console.log('calling parse hash')
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
+        // console.log(`Auth.js handlAuthentication: parsed hash and handled auth; results as follows: ${authResult}`)
+        // console.log(authResult)
         this.setSession(authResult);
         callback(authResult)
       } else if (err) {
@@ -73,8 +75,9 @@ export default class Auth {
          callback(authResult)
        } else if (err) {
          this.logout();
+         alert('Please login again after refreshing the page')
          console.log(err);
-         alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
+         console.log(`Auth.js renewSession: Could not get a new token (${err.error}: ${err.error_description}).`);
        }
     });
   }

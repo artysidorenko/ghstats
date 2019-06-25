@@ -7,10 +7,6 @@ export function parseMonth (monthArray, datapoint) {
 }
 
 export function generateScales (dataArray, dataField, height, width) {
-  // console.log(dataArray[0][0])
-  // console.log(dataArray[dataArray.length - 1][0])
-  // console.log(parseMonth(monthArray, dataArray[0][0]))
-  // console.log(parseMonth(monthArray, dataArray[dataArray.length - 1][0]))
   const xScale = d3.scaleTime()
     .domain([
       parseMonth(monthArray, dataArray[0][0]),

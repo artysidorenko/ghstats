@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import TreeMap from '../visualisations/TreeMap'
-
-// https://help.github.com/en/articles/searching-for-repositories
+import {monthsWord, years, monthsDigit, LANGUAGE_REPOS_QUERY} from '../../utils/queryHelpers'
+import MonthForm from '../forms/MonthForm'
 
 class Languages extends Component {
   constructor(props) {
@@ -31,32 +31,34 @@ class Languages extends Component {
   render() {
     return (
       <div className="Languages__container">
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Period:
-          <select value={this.state.month} onChange={this.handleChangeMonth}>
-              {monthsWord.map((elem, index) =>
-                <option key={index} value={elem}>
-                  {elem}
-                </option>
-              )}
-            </select>
-            <select value={this.state.year.slice(2)} onChange={this.handleChangeYear}>
-              {years.map((elem, index) =>
-                <option key={index} value={elem}>
-                  {elem}
-                </option>
-              )}
-            </select>
-          </label>
-          <input type="submit" value="Submit" disabled={!this.props.keyReceived}/>
-        </form>
+        <MonthForm
+          handleSubmit={this.handleSubmit}
+          handleChangeMonth={this.handleChangeMonth}
+          handleChangeYear={this.handleChangeYear}
+          keyReceived={this.props.keyReceived}
+          month={this.state.month}
+          year={this.state.year}
+        />
+        {!this.state.submit && !localStorage.getItem('isLoggedIn') && (
+          <h4 className="Languages__Message">
+            Point-in-time View of Relative Language Popularity: Please login to access visualisations
+          </h4>
+        )}
+        {!this.state.submit && localStorage.getItem('isLoggedIn') && (
+          <h4 className="Languages__Message">
+            Point-in-time View of Relative Language Popularity: Select your request using the dropdowns
+          </h4>
+        )}
         {this.state.submit && <Query
-          query={LANGUAGE_REPOS_QUERY(`${this.state.year}-${monthsDigit[monthsWord.indexOf(this.state.month)]}`)}
+          query={LANGUAGE_REPOS_QUERY(`${this.state.year}-${monthsDigit[monthsWord.indexOf(this.state.month)]}`, gql)}
         >
           {({ loading, error, data }) => {
-            if (loading) return <span>Loading</span>
-            if (error) return <div>Error, please see below. <br />
+            if (loading) return (
+              <div className="Languages__LoaderBox">
+                <div className="loader"></div>
+              </div>
+            )
+            if (error) return <div className="Languages__Message">Error, please see below. <br />
               ${error.toString()}
               </div>
             console.log(`Operation quota cost: ${data.rateLimit.cost}`)
@@ -71,69 +73,5 @@ class Languages extends Component {
     );
   }
 }
-
-const monthsWord = [
-  'jan',
-  'feb',
-  'mar',
-  'apr',
-  'may',
-  'jun',
-  'jul',
-  'aug',
-  'sep',
-  'oct',
-  'nov',
-  'dec'
-]
-
-const years = ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-]
-
-const monthsDigit = [
-  '01',
-  '02',
-  '03',
-  '04',
-  '05',
-  '06',
-  '07',
-  '08',
-  '09',
-  '10',
-  '11',
-  '12'
-]
-
-const languages = ['Javascript', 'Java', 'Python', 'CSS', 'PHP', 'Ruby', 'C++', 'C', 'Shell', 'C#', 'HTML', 'Go', 'Typescript',
-'Swift', 'Scala'
-]
-
-// period in format YYYY-MM
-const LANGUAGE_REPOS_QUERY = (period) => gql`
-  query {
-  rateLimit {
-    cost
-    remaining
-    resetAt
-  }
-  ALL: search (
-    type: REPOSITORY
-    query: "created:${period}"
-  ) {
-    repositoryCount
-  }
-  ${languages.reduce((total, elem) => total + addLanguageNode(elem, period), '')}
-  }
-`
-
-const addLanguageNode = (language, period) => `
-${language.replace('++', 'plusplus').replace('#', 'sharp')}: search (
-    type: REPOSITORY
-    query: "created:${period} language:${language}"
-  ) {
-    repositoryCount
-  }
-`
 
 export default Languages;
