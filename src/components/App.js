@@ -1,18 +1,34 @@
 import React, { Component } from 'react'
+import {
+  Col,
+  Container,
+  Row
+} from "shards-react"
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import MonthlyNewRepos from './queries/MonthlyNewRepos'
-import Languages from './queries/Languages'
+import { Menu, Banner } from './navigation'
+import Instructions from './other/Instructions'
+import Dashboard from './Dashboard'
+import MonthlyNewRepos from "./queries/MonthlyNewRepos"
+import Languages from "./queries/Languages"
 
-import '../styles/App.scss'
+import '../styles/_global.scss'
 import '../styles/mobile.scss'
+import "bootstrap/dist/css/bootstrap.min.css"
+import "shards-ui/dist/css/shards.min.css"
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loggingIn: false,
-      keyReceived: false
-    }
+      keyReceived: false,
+      highlightLogin: false,
+      highlightOffline: false,
+      highlightDashboard: false,
+      highlightMonthly: false,
+      highlightTreemap: false
+    };
   }
 
   login() {
@@ -25,19 +41,22 @@ class App extends Component {
 
   componentDidMount() {
     const { renewSession } = this.props.auth;
-    if (localStorage.getItem('isLoggedIn') === 'true') {
+    if (localStorage.getItem("isLoggedIn") === "true") {
       // console.log('isLoggedIn = true; attempting to renew session...')
       renewSession(authResult => {
         this.getAPIToken(authResult.idToken, body => {
-          this.props.setToken(body)
-          this.setState({ keyReceived: true })
-        })
+          this.props.setToken(body);
+          this.setState({ keyReceived: true });
+        });
       });
-    }
-    else if (this.props.history.location.hash) {
-      this.setState({loggingIn: true})
-      // console.log(`App.js props.history.location.hash: ${this.props.history.location.hash}`)
-      this.handleAuthentication(this.props.history)
+    } else if (this.props.history.location.hash) {
+      this.setState({ loggingIn: true });
+      console.log(
+        `App.js props.history.location.hash: ${
+          this.props.history.location.hash
+        }`
+      );
+      this.handleAuthentication(this.props.history);
     }
   }
 
@@ -45,12 +64,12 @@ class App extends Component {
     if (/access_token|id_token|error/.test(location.hash)) {
       this.props.auth.handleAuthentication(authResult => {
         this.getAPIToken(authResult.idToken, body => {
-          this.props.setToken(body)
-          this.setState({ keyReceived: true, loggingIn: false })
-        })
-      })
+          this.props.setToken(body);
+          this.setState({ keyReceived: true, loggingIn: false });
+        });
+      });
     }
-  }
+  };
 
   /**
    * @jwt string: this is the ID token we were sent from auth0 upon authentication
@@ -59,59 +78,98 @@ class App extends Component {
   getAPIToken = (jwt, callback) => {
     const request = require("request");
     const options = {
-      method: 'GET',
-      url: 'https://wt-f1d82d610072deeaf794b2ad8e84524c-0.sandbox.auth0-extend.com/authToken',
-      headers: { authorization: `Bearer ${jwt}` },
+      method: "GET",
+      url:
+        "https://wt-f1d82d610072deeaf794b2ad8e84524c-0.sandbox.auth0-extend.com/authToken",
+      headers: { authorization: `Bearer ${jwt}` }
     };
 
-    request(options, function (error, response, body) {
+    request(options, function(error, response, body) {
       if (error) {
         // console.log(`App.js getAPIToken request() error: ${error}`)
-        throw new Error(error)
+        throw new Error(error);
       }
       // console.log('App.js getAPIToken: initiating callback on response body:')
       // console.log(body)
-      callback(body)
+      callback(body);
+    });
+  };
+
+  updateInstructionState = (login, offline, dashboard, monthly, treemap) => {
+    this.setState({
+      highlightLogin: login,
+      highlightOffline: offline,
+      highlightDashboard: dashboard,
+      highlightMonthly: monthly,
+      highlightTreemap: treemap
     });
   }
 
+  resetInstructionState = () => {
+    console.log('test2')
+    this.updateInstructionState(false, false, false, false, false)
+  }
+
+  instructionHelpers = {
+    login: () => {console.log('test') ;this.updateInstructionState(!this.state.highlightLogin, false, false, false, false)},
+    offline: () => {this.updateInstructionState(false, !this.state.highlightOffline, false, false, false)},
+    dashboard: () => {this.updateInstructionState(false, false, !this.state.highlightDashboard, false, false)},
+    monthly: () => {this.updateInstructionState(false, false, false, !this.state.highlightMonthly, false)},
+    treemap: () => {this.updateInstructionState(false, false, false, false, !this.state.highlightTreemap)}
+  };
+
   render() {
-    const { isAuthenticated } = this.props.auth
-    const { loggingIn, keyReceived } = this.state
-    const authCheck = isAuthenticated()
+    const { isAuthenticated } = this.props.auth;
+    const { loggingIn, keyReceived } = this.state;
+    const authCheck = isAuthenticated();
+    const highlights = {
+      login: this.state.highlightLogin,
+      offline: this.state.highlightOffline,
+      dashboard: this.state.highlightDashboard,
+      monthly: this.state.highlightMonthly,
+      treemap: this.state.highlightTreemap,
+    };
 
     return (
-      <div className="App__container">
-        <h1>GitHub Data Dashboard</h1>
-        {!authCheck && !loggingIn && (
-            <button
-              id="qsLoginBtn"
-              className="btn-margin App__loginBtn"
-              onClick={this.login.bind(this)}
-            >
-              Log In With GitHub
-            </button>
-        )}
-        {loggingIn && (
-          <p className="loggingIn">Authenticating</p>
-        )}
-        {authCheck && !loggingIn && (
-          <div>
-            <span>Logged in successfully</span>
-            <button
-              id="qsLogoutBtn"
-              className="btn-margin App__logoutBtn"
-              onClick={this.logout.bind(this)}
-            >
-              Logout
-            </button>
-          </div>
-        )}
-        <h3>Instructions once authorised: for each visualisation, select the desired parameters and click submit to fetch and visualise data</h3>
-        <MonthlyNewRepos keyReceived={keyReceived} />
-        <Languages keyReceived={keyReceived} />
-      </div>
-    )
+      <Router>
+        <Container fluid={true} className="px-0 h-100vh">
+          <Row className="no-gutters h-100vh">
+            <Menu highlights={highlights} handleClick={this.resetInstructionState}/>
+
+            <Col className="main col-auto w-100">
+              <Banner
+                authCheck={authCheck}
+                loggingIn={loggingIn}
+                login={this.login.bind(this)}
+                logout={this.logout.bind(this)}
+                highlights={highlights}
+                handleClick={this.resetInstructionState}
+              />
+              <Container fluid={true} className="p-3 content-height">
+                <Route
+                  path="/instructions"
+                  render={() => (
+                    <Instructions helpers={this.instructionHelpers} />
+                  )}
+                />
+                <Route
+                  path="/dashboard"
+                  render={() => 'test'}
+                />
+                <Route
+                  path="/monthlyrepos"
+                  render={() => <MonthlyNewRepos keyReceived={keyReceived}/>}
+                />
+                <Route
+                  path="/treemap"
+                  render={() => <Languages keyReceived={keyReceived}/>}
+                />
+              </Container>
+            </Col>
+          </Row>
+        </Container>
+      </Router>
+    );
   }
 }
 

@@ -6,24 +6,34 @@
     "node": "8.10.0"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.21",
+    "@fortawesome/free-regular-svg-icons": "^5.10.1",
+    "@fortawesome/free-solid-svg-icons": "^5.10.1",
+    "@fortawesome/react-fontawesome": "^0.1.4",
     "apollo-boost": "^0.3.1",
-    "apollo-link-context": "^1.0.17",
-    "auth0-js": "^9.10.1",
-    "d3": "^5.9.2",
+    "apollo-link-context": "^1.0.18",
+    "auth0-js": "^9.11.2",
+    "browserslist": "^4.6.6",
+    "caniuse-lite": "^1.0.30000988",
+    "classnames": "^2.2.6",
+    "d3": "^5.9.7",
     "dotenv": "^7.0.0",
     "express-favicon": "^2.0.1",
-    "express-jwt": "^5.1.0",
-    "graphql": "^14.1.1",
+    "express-jwt": "^5.3.1",
+    "graphql": "^14.4.2",
     "history": "^4.9.0",
     "node-sass": "^4.12.0",
     "prop-types": "^15.7.2",
-    "react": "^16.8.3",
-    "react-apollo": "^2.5.1",
-    "react-dom": "^16.8.3",
-    "react-scripts": "2.1.5"
+    "react": "^16.8.6",
+    "react-apollo": "^2.5.8",
+    "react-dom": "^16.8.6",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "^3.0.1",
+    "shards-react": "^1.0.3"
   },
   "scripts": {
-    "start": "node server.js",
+    "start:nodemon": "nodemon server.js",
+    "start": "PORT=8080 react-scripts start -port",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -37,5 +47,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
 }

@@ -4,7 +4,7 @@ const AUTH_CONFIG = {
 }
 
 if (process.env.REACT_APP_CONTEXT === 'localmachine') {
-  AUTH_CONFIG.callbackUrl = 'http://localhost:3000'
+  AUTH_CONFIG.callbackUrl = 'http://localhost:8080'
 } else AUTH_CONFIG.callbackUrl = 'https://ghstats-arty.herokuapp.com/'
 
 export default AUTH_CONFIG

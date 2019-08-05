@@ -1,0 +1,76 @@
+@import './variables';
+
+.sidebar {
+  .navbar-brand {
+    img {
+      width: 30%;
+      max-width: 25px;
+    }
+    span {
+      font-size: 1rem;
+    }
+  }
+  .offset-y-125em {
+    transform: translateY(0.125em)
+  }
+  .nav-item {
+    transition: box-shadow .2s ease,color .2s ease,background-color .2s ease;
+    transition-property: box-shadow, color, background-color;
+    transition-duration: 0.2s, 0.2s, 0.2s;
+    transition-timing-function: ease, ease, ease;
+    transition-delay: 0s, 0s, 0s;
+    &:hover {
+      color: $hyperlink;
+      background-color: $bg-subtle;
+      border-left: 3px solid $hyperlink;
+      cursor: pointer
+    }
+    &.selected {
+      color: $hyperlink;
+      background-color: $bg-subtle;
+      border-left: 3px solid $hyperlink;
+    }
+    .nav-link {
+      color: $regular;
+      &:hover {
+        color: $hyperlink;
+      }
+      svg {
+        color: $subtle;
+        &:hover {
+          color: $hyperlink;
+        }
+      }
+    }
+  }
+}
+
+.logging-in:after {
+  content: ' .';
+  animation: dots 1s steps(5, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% {
+      color: rgba(0,0,0,0);
+      text-shadow:
+        .25em 0 0 rgba(0,0,0,0),
+        .5em 0 0 rgba(0,0,0,0);
+    }
+    40% {
+      color: black;
+      text-shadow:
+        .25em 0 0 rgba(0,0,0,0),
+        .5em 0 0 rgba(0,0,0,0);
+    }
+    60% {
+      text-shadow:
+        .25em 0 0 black,
+        .5em 0 0 rgba(0,0,0,0);
+    }
+    80%, 100% {
+      text-shadow:
+        .25em 0 0 black,
+        .5em 0 0 black;
+    }
+  }

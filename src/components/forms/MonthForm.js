@@ -10,27 +10,42 @@ const MonthForm = ({
   month,
   year
 }) => (
-    <form onSubmit={handleSubmit}>
-      <div className="month">
-        Period:
-          <select value={month} onChange={handleChangeMonth}>
-          {monthsWord.map((elem, index) =>
+  <form class="form-inline" onSubmit={handleSubmit}>
+    <div className="mx-auto py-2 w-100 text-center font-weight-bold2 border-bottom d-flex justify-content-between">
+      <div class="form-group">
+        <span className="mx-2">Period:</span>
+        <select
+          className="custom-select"
+          value={month}
+          onChange={handleChangeMonth}
+        >
+          {monthsWord.map((elem, index) => (
             <option key={`month-${index}`} value={elem}>
-              {elem}
+              {`${elem[0].toUpperCase()}${elem.slice(1)}`}
             </option>
-          )}
+          ))}
         </select>
-        <select value={year.slice(2)} onChange={handleChangeYear}>
-          {years.map((elem, index) =>
+        <select
+          className="custom-select"
+          value={year.slice(2)}
+          onChange={handleChangeYear}
+        >
+          {years.map((elem, index) => (
             <option key={`year-${index}`} value={elem}>
-              {elem}
+              {`'${elem}`}
             </option>
-          )}
+          ))}
         </select>
       </div>
-      <input type="submit" value="Submit" disabled={!keyReceived} />
-    </form>
-  )
+      <input
+        className="mx-2 btn btn-light border"
+        type="submit"
+        value="Submit"
+        disabled={!keyReceived}
+      />
+    </div>
+  </form>
+);
 
 MonthForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
